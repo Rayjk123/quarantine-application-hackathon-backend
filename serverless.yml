@@ -1,0 +1,10 @@
+service: serverless-hello-world
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+functions:
+  helloWorld:
+    handler: index.handler
+    name: serverless-hello-world
