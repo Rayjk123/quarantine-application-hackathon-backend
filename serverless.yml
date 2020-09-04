@@ -1,10 +1,35 @@
-service: serverless-hello-world
+service: serverless-quarantine-application
 
 provider:
   name: aws
   runtime: nodejs12.x
 
 functions:
-  helloWorld:
+  quarantineApplication:
     handler: index.handler
-    name: serverless-hello-world
+    name: serverless-quarantine-application
+    events:
+      - http:
+          path: auth
+          method: post
+      - http:
+          path: user/{userPhoneNumber}
+          method: get
+          request:
+            parameters:
+              paths:
+                userPhoneNumber: true
+      - http:
+          path: user/{userPhoneNumber}/startTimer
+          method: get
+          request:
+            parameters:
+              paths:
+                userPhoneNumber: true
+      - http:
+          path: user/{userPhoneNumber}/quarantineTimer
+          method: get
+          request:
+            parameters:
+              paths:
+                userPhoneNumber: true
