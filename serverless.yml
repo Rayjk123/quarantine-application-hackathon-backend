@@ -13,6 +13,9 @@ functions:
           path: auth
           method: post
       - http:
+          path: register
+          method: post
+      - http:
           path: user/{userPhoneNumber}
           method: get
           request:

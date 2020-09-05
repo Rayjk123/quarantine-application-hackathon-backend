@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && serverless invoke local --function quarantineApplication",
+    "start": "tsc && serverless invoke local --function quarantineApplication --path event.json",
     "deploy": "tsc && serverless deploy",
     "deploy-function": "tsc && serverless deploy function --function quarantineApplication",
     "test": "echo \"Error: no test specified\" && exit 1"
