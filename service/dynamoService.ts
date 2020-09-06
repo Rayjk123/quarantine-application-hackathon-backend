@@ -60,3 +60,28 @@ export const updateQuarantineTime = async (phoneNumber: string, quarantineTime: 
     console.log(`Successfully upserted user: ${JSON.stringify(result)}`);
     return true;
 };
+
+export const updateViolation = async (phoneNumber: string) => {
+    var date = new Date();
+    const query: any = {
+        Key: {
+            'phoneNumber': {
+                S: phoneNumber
+            }
+        },
+        ExpressionAttributeValues: {
+            ':vt': {N: date.getTime().toString(10)},
+            ':v': {BOOL: true},
+        },
+        ReturnValues: "ALL_NEW",
+        TableName: 'quarantineApplication',
+        UpdateExpression: `set violationTime = :vt, violated = :v`
+    };
+    const result = await dynamoDb.updateItem(query).promise();
+    if (result.$response.httpResponse.statusCode !== 200) {
+        return false;
+    }
+
+    console.log(`Successfully upserted violation Time: ${JSON.stringify(result)}`);
+    return true;
+};

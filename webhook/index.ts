@@ -4,6 +4,7 @@ AWS.config.apiVersions = {
     dynamodb: '2012-08-10'
 };
 import {APIGatewayProxyEvent, APIGatewayProxyResult} from "aws-lambda";
+import {updateViolation} from "../service/dynamoService";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const response: APIGatewayProxyResult = {
@@ -14,19 +15,19 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     console.log('BELOW IS THE EVENT');
     console.log(JSON.stringify(event));
 
-    if (event.httpMethod === 'POST') {
-        console.log('Post Method is called for webhook');
-        // if (event.body === null) {
-        //     response.statusCode = 400;
-        //     response.body = 'Username and Password are required';
-        //     return response;
-        // }
-        // const requestBody = JSON.parse(event.body);
-        // if (event.path === '/auth') {
-        //     return await authUser(requestBody.phoneNumber, requestBody.password);
-        // }
-        //
-        // return await registerUser(requestBody);
+    if (event.body === null) {
+        response.statusCode = 400;
+        return response;
+    }
+    const requestBody = JSON.parse(event.body);
+
+    if (requestBody.event.type === 'user.exited_geofence') {
+        const phoneNumber = requestBody.event.user.userId;
+        const result = await updateViolation(phoneNumber);
+        if (!result) {
+            response.statusCode = 500;
+            response.body = 'Failed to update Violation information'
+        }
     }
 
     return response;
