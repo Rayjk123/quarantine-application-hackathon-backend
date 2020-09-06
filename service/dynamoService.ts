@@ -85,3 +85,20 @@ export const updateViolation = async (phoneNumber: string) => {
     console.log(`Successfully upserted violation Time: ${JSON.stringify(result)}`);
     return true;
 };
+
+export const getQuarantineTime = async (phoneNumber: string) => {
+    const query = {
+        Key: {
+            'phoneNumber': {
+                S: phoneNumber
+            }
+        },
+        TableName: 'quarantineApplication'
+    };
+    const user = await dynamoDb.getItem(query).promise();
+    if (user === null || Object.keys(user).length === 0 || !user.Item) {
+        return null;
+    }
+
+    return user.Item.quarantineTime.N;
+};

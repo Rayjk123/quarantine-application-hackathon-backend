@@ -7,6 +7,7 @@ import {APIGatewayProxyEvent, APIGatewayProxyResult} from "aws-lambda";
 import {authUser} from "./service/authService";
 import {registerUser} from "./service/registerService";
 import {setupGeofence} from "./service/geofenceService";
+import {getQuarantineTime} from "./service/dynamoService";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const response: APIGatewayProxyResult = {
@@ -42,6 +43,23 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         }
         const requestBody = JSON.parse(event.body);
         return await setupGeofence(requestBody);
+    }
+
+    // Get data
+    if (event.httpMethod === 'GET') {
+        console.log('GET Method is called');
+
+        if (event.resource === '/user/{userPhoneNumber}/quarantineTimer' && event.pathParameters != null) {
+            const phoneNumber = event.pathParameters.userPhoneNumber;
+            const time = await getQuarantineTime(phoneNumber);
+            if (!time) {
+                response.statusCode = 500;
+                response.body = "Failed to grab Quarantine Time";
+                return response;
+            }
+            response.body = time.toString();
+            return response;
+        }
     }
 
     return response;
