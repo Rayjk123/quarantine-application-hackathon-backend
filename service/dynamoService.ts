@@ -1,6 +1,7 @@
 import * as AWS from 'aws-sdk';
 
 const dynamoDb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+const selectn = require('selectn');
 
 export const validateUser = async (phoneNumber: string, password: string) => {
     const query = {
@@ -101,4 +102,22 @@ export const getQuarantineTime = async (phoneNumber: string) => {
     }
 
     return user.Item.quarantineTime.N;
+};
+
+export const getViolators = async () => {
+    const query = {
+        TableName: 'quarantineApplication'
+    };
+    const violators = [];
+    const user = await dynamoDb.scan(query).promise();
+    if (user.Items) {
+        for (let item of user.Items) {
+            console.log(JSON.stringify(item));
+            if (selectn('violated.BOOL', item) === true) {
+                violators.push(item);
+            }
+        }
+    }
+
+    return violators;
 };

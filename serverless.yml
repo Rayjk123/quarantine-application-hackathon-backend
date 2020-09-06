@@ -19,6 +19,9 @@ functions:
           path: geofence
           method: put
       - http:
+          path: violators
+          method: get
+      - http:
           path: user/{userPhoneNumber}
           method: get
           request:

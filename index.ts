@@ -7,7 +7,7 @@ import {APIGatewayProxyEvent, APIGatewayProxyResult} from "aws-lambda";
 import {authUser} from "./service/authService";
 import {registerUser} from "./service/registerService";
 import {setupGeofence} from "./service/geofenceService";
-import {getQuarantineTime} from "./service/dynamoService";
+import {getQuarantineTime, getViolators} from "./service/dynamoService";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const response: APIGatewayProxyResult = {
@@ -59,6 +59,11 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             }
             response.body = time.toString();
             return response;
+        }
+
+        if (event.path === '/violators') {
+            const result = await getViolators();
+            response.body = JSON.stringify(result);
         }
     }
 
