@@ -16,6 +16,9 @@ functions:
           path: register
           method: post
       - http:
+          path: geofence
+          method: put
+      - http:
           path: user/{userPhoneNumber}
           method: get
           request:
@@ -36,3 +39,10 @@ functions:
             parameters:
               paths:
                 userPhoneNumber: true
+  quarantineApplicationWebhook:
+    handler: webhook/index.handler
+    name: serverless-quarantine-webhook
+    events:
+      - http:
+          path: webhook
+          method: post

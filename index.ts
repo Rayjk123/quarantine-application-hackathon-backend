@@ -6,6 +6,7 @@ AWS.config.apiVersions = {
 import {APIGatewayProxyEvent, APIGatewayProxyResult} from "aws-lambda";
 import {authUser} from "./service/authService";
 import {registerUser} from "./service/registerService";
+import {setupGeofence} from "./service/geofenceService";
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const response: APIGatewayProxyResult = {
@@ -31,7 +32,17 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         return await registerUser(requestBody);
     }
 
-
+    // GeoFence
+    if (event.httpMethod === 'PUT') {
+        console.log('PUT Method is called');
+        if (event.body === null) {
+            response.statusCode = 400;
+            response.body = 'Username and Password are required';
+            return response;
+        }
+        const requestBody = JSON.parse(event.body);
+        return await setupGeofence(requestBody);
+    }
 
     return response;
 };

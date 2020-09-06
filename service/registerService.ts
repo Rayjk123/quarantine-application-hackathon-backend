@@ -8,6 +8,7 @@ export const registerUser = async (requestBody: any): Promise<APIGatewayProxyRes
     if (requestBody.phoneNumber) { item.phoneNumber = { S: requestBody.phoneNumber }; }
     if (requestBody.startTime) { item.startTime = { N: requestBody.startTime }; }
     if (requestBody.quarantineTime) { item.quarantineTime = { N: requestBody.quarantineTime }; }
+    if (requestBody.address) { item.address = { S: requestBody.address }; }
     item.isAdmin = { BOOL: false };
 
     const result = await upsertUser(item);

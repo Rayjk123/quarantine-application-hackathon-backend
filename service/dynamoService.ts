@@ -35,3 +35,28 @@ export const upsertUser = async (item: any) => {
 
     return true;
 };
+
+export const updateQuarantineTime = async (phoneNumber: string, quarantineTime: number, longitude?: number, latitude?: number) => {
+    const query: any = {
+        Key: {
+            'phoneNumber': {
+                S: phoneNumber
+            }
+        },
+        ExpressionAttributeValues: {
+            ':qt': {N: quarantineTime.toString(10)},
+            ':lg': {N: (longitude || 0).toString(10)},
+            ':lt': {N: (latitude || 0).toString(10)},
+        },
+        ReturnValues: "ALL_NEW",
+        TableName: 'quarantineApplication',
+        UpdateExpression: `set quarantineTime = :qt, longitude = :lg, latitude = :lt`
+    };
+    const result = await dynamoDb.updateItem(query).promise();
+    if (result.$response.httpResponse.statusCode !== 200) {
+        return false;
+    }
+
+    console.log(`Successfully upserted user: ${JSON.stringify(result)}`);
+    return true;
+};
