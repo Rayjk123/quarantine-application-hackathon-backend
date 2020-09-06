@@ -10,6 +10,7 @@ export const authUser = async (phoneNumber: string, password: string): Promise<A
     try {
         user = await validateUser(phoneNumber, password);
     } catch (error) {
+        console.log(JSON.stringify(error));
         response.statusCode = 500;
         response.body = 'An error occurred while trying to retrieve the user';
         return response;
