@@ -1,4 +1,4 @@
-# AWS Node.js 12 Lambda with Typescript and Serverless
-Basic AWS Lambda Template for creating an AWS Lambda running on Node.js 12,
-written in Typescript, and run/deployed on Serverless.
+# Quarantine Application Backend
+Backend which handled all the Radar.io communication and dynamoDb communication for the Client side Android application.
 
+[Client Side README with more information](https://github.com/Rayjk123/QuarantineApplicationHackathon)
